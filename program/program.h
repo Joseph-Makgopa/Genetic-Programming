@@ -28,8 +28,12 @@ public:
     program(const program& right)
     {
         root = right.root->clone();
-        //cout<<"copy: "<<root->get_name()<<endl;
+        fitness = right.fitness;
+    }
 
+    program(const program&& right)
+    {
+        root = move(right.root);
         fitness = right.fitness;
     }
 
@@ -66,6 +70,17 @@ public:
     {
         root = right.root->clone();
         fitness = right.fitness;
+
+        return *this;
+    }
+
+    program operator=(const program&& right)
+    {
+        if(this != &right)
+        {
+            root = right.root->clone();
+            fitness = right.fitness;
+        }
 
         return *this;
     }

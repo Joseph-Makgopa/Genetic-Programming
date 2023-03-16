@@ -13,6 +13,24 @@
 
 using namespace std;
 
+class check{
+    public:
+        check(int val)
+        {
+
+        }
+
+        check(check& other)
+        {
+            cout<<"copy"<<endl;
+        }
+
+        check(check&& other)
+        {
+            cout<<"move"<<endl;
+        }
+};
+
 int main()
 {
     loader data_loader;

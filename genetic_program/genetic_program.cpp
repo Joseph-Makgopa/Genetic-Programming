@@ -153,11 +153,53 @@ program genetic_program::mutate(program parent)
 void genetic_program::execute()
 {
     generate_population();
-    vector<program> new_population;
+    program best;
 
     for(int run = 0; run < parameters.runs; run++)
     {
-        unsigned int cutoff = floor(parameters.crossover_rate * parameters.population_size);
-        
+        srand(parameters.seeds[run]);
+
+        for(int generation = 0; generation < parameters.generations; generation++)
+        {
+            unsigned int cutoff = floor(parameters.population_size * parameters.crossover_rate);
+            unsigned int offspring_counter = 0;
+            vector<program> new_population(parameters.population_size);
+
+            for(int count = 0; count < parameters.population_size; count++)
+            {
+                population[count].set_fitness(data,parameters.bound);
+
+                if(population[count].get_fitness() > best.get_fitness())
+                {
+                    best = population[count];
+                }
+            }   
+
+            while(offspring_counter < parameters.population_size)
+            {
+                if(offspring_counter < cutoff)
+                {
+                    pair<program,program> offspring = crossover(population[select_program()], population[select_program()]);
+                    new_population[offspring_counter++] = move(offspring.first);
+                    new_population[offspring_counter++] = move(offspring.second);
+                }else
+                {
+                    program offspring = mutate(population[select_program()]);
+                    new_population[offspring_counter++] = move(offspring);      
+                }
+            }
+
+            population = move(new_population);
+        }
+
+        for(int count = 0; count < parameters.population_size; count++)
+        {
+            population[count].set_fitness(data,parameters.bound);
+
+            if(population[count].get_fitness() > best.get_fitness())
+            {
+                best = population[count];
+            }
+        }  
     }
 }

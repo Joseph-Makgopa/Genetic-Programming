@@ -16,13 +16,16 @@ enum generation_method
 
 struct algorithm_parameters
 {
+    vector<unsigned int> seeds;
     unsigned int runs;
+    unsigned int generations;
     unsigned int max_depth;
     unsigned int population_size;
     unsigned int tournament_size;
     unsigned int mutation_depth;
-    float crossover_rate;
+    double crossover_rate;
     generation_method generation_method;
+    double bound;
 };
 
 class genetic_program
@@ -32,7 +35,7 @@ class genetic_program
         vector<program> population;
         vector<Features> data;
     public:
-        genetic_program(algorithm_parameters parametersr): parameters(parameters)
+        genetic_program(algorithm_parameters parameters): parameters(parameters)
         {
 
         }
