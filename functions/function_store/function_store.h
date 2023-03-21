@@ -10,6 +10,7 @@
 #include "../logarithm/logarithm.h"
 #include "../cosine/cosine.h"
 #include "../sine/sine.h"
+#include "../exponential/exponential.h"
 
 using namespace std;
 
@@ -52,6 +53,9 @@ class function_store
                 case 6:{
                     result = make_shared<cosine>();
                 }break;
+                case 7:{
+                    result = make_shared<exponential>();
+                }break;
             }
 
             return result;
@@ -66,7 +70,8 @@ class function_store
                 make_shared<divide>(),
                 make_shared<logarithm>(),
                 make_shared<sine>(),
-                make_shared<cosine>()
+                make_shared<cosine>(),
+                make_shared<exponential>()
             };
         }
 

@@ -1,20 +1,20 @@
-#ifndef SINE_H
-#define SINE_H
+#ifndef EXPONENTIAL_H
+#define EXPONENTIAL_H
 #include "../../primitive/primitive.h"
 #include "../../features/Features.h"
 #include <memory>
 #include <cmath>
 
-class sine: public primitive
+class exponential: public primitive
 {
     public:
-        sine(std::shared_ptr<primitive> arg): primitive(1, "sine")
+        exponential(std::shared_ptr<primitive> arg): primitive(1, "exp")
         {
             set_argument(arg);
         }
 
 
-        sine(): primitive(1, "sine")
+        exponential(): primitive(1, "exp")
         {
             
         }
@@ -26,12 +26,12 @@ class sine: public primitive
 
         double eval(Features& features)
         {
-            return sin(get(0)->eval(features));
+            return exp(get(0)->eval(features));
         }
 
         shared_ptr<primitive> clone()
         {
-            return shared_ptr<sine>(new sine(get(0)->clone()));
+            return shared_ptr<exponential>(new exponential(get(0)->clone()));
         }
 };
 

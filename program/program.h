@@ -11,7 +11,7 @@
 class program{
 private:
     std::shared_ptr<primitive> root;
-    float fitness;
+    double fitness;
     void grow_method(shared_ptr<primitive>& parent,unsigned short depth);
     void full_method(shared_ptr<primitive>& parent,unsigned short depth);
 
@@ -47,7 +47,7 @@ public:
         return root;
     }
 
-    float get_fitness() const
+    double get_fitness() const
     {
         return fitness;
     }
@@ -56,7 +56,7 @@ public:
 
     pair<shared_ptr<primitive>, shared_ptr<primitive>> get_node(unsigned int index);
 
-    float eval(Features& features)
+    double eval(Features& features)
     {
         if(root.use_count() != 0)
         {
@@ -85,7 +85,7 @@ public:
         return *this;
     }
 
-    void set_fitness(vector<Features>& data,float bound);
+    void set_fitness(Features* data,unsigned int size, float bound);
 
     void build(unsigned int max_depth,bool grow);
 

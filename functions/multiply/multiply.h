@@ -29,7 +29,7 @@ class multiply: public primitive
             set(1, right);
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return get(0)->eval(features) * get(1)->eval(features);
         }

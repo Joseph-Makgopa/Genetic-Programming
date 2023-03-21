@@ -19,7 +19,7 @@ class dropoff_day_of_week: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.dropoff_day_of_week;
         }

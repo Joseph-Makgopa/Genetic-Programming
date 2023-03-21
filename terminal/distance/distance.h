@@ -19,7 +19,7 @@ class distance: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.distance;
         }

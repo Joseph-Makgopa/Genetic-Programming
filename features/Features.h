@@ -2,6 +2,7 @@
 #define FEATURES_H
 #include <string>
 #include <iostream>
+#include <fstream>
 
 class Features
 {
@@ -28,7 +29,8 @@ class Features
         std::string to_str() const;
 
         std::string to_line() const;
-        
-};
+
+        void save_text(std::fstream& file, unsigned int index) const;    
+};  
 
 #endif

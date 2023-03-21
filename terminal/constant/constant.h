@@ -25,7 +25,7 @@ class constant: public primitive
             return std::shared_ptr<constant>(new constant());;
         }
 
-        float eval(Features& features)
+        double eval(Features& )
         {
             return value;
         }

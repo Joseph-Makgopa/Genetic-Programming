@@ -10,22 +10,25 @@
 
 using namespace std;
 
-void program::set_fitness(vector<Features>& data,float bound)
+void program::set_fitness(Features* data,unsigned int size,float bound)
 {
     int hit = 0;
 
-    for(Features& features: data)
+    for(int count = 0; count < size; count++)
     {
-        float value = eval(features);
-        value = abs(value - features.duration);
+        float value = eval(data[count]);
+        // cout<<"value: "<<value<<endl;
+        // cout<<"duration: "<<data[count].duration<<endl;
+        value = abs(value - data[count].duration);
         
+        // cout<<"abs: "<<value<<endl;
         if(value <= bound)
         {
             hit++;
         }
     }
 
-    fitness = float(hit) / data.size();
+    fitness = hit;
 }
 
 void program::build(unsigned int max_depth,bool grow)

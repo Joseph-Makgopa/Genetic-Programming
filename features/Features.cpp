@@ -1,5 +1,6 @@
 #include "Features.h"
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -67,4 +68,33 @@ string Features::to_line() const
     result += to_string(dust_concentration);
 
     return result;
+}
+
+void Features::save_text(fstream& file, unsigned int index) const{
+    file<<index<<",";
+    file<<duration<<",";
+    file<<distance<<",";
+    file<<pickup_longitude<<",";
+    file<<pickup_latitude<<",";
+    file<<dropoff_longitude<<",";
+    file<<dropoff_latitude<<",";
+    file<<haversine<<",";
+    file<<pickup_month<<",";
+    file<<pickup_day<<",";
+    file<<pickup_hour<<",";
+    file<<pickup_minute<<",";
+    file<<pickup_day_of_week<<",";
+    file<<dropoff_month<<",";
+    file<<dropoff_day<<",";
+    file<<dropoff_hour<<",";
+    file<<dropoff_minute<<",";
+    file<<dropoff_day_of_week<<",";
+    file<<temperature<<",";
+    file<<precipitation<<",";
+    file<<wind_speed<<",";
+    file<<humidity<<",";
+    file<<solar_radiation<<",";
+    file<<snow_fall<<",";
+    file<<ground_temperature<<",";
+    file<<dust_concentration<<endl;
 }

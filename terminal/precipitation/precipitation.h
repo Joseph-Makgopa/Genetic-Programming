@@ -19,7 +19,7 @@ class precipitation: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.precipitation;
         }

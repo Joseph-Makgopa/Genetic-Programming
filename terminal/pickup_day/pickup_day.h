@@ -19,7 +19,7 @@ class pickup_day: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.pickup_day;
         }

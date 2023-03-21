@@ -19,7 +19,7 @@ class dropoff_minute: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.dropoff_minute;
         }

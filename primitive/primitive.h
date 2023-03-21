@@ -59,7 +59,7 @@ class primitive{
 
         virtual shared_ptr<primitive> clone()=0;
 
-        virtual float eval(Features&)=0;
+        virtual double eval(Features&)=0;
 
         virtual string str() const
         {

@@ -24,7 +24,7 @@ class logarithm: public primitive
             set(0, arg);
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return log10(get(0)->eval(features));
         }

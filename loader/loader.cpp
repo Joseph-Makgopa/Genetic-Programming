@@ -7,87 +7,6 @@
 
 using namespace std;
 
-Features loader::extract(string sline)
-{
-    Features result;
-
-    sline.erase(0,sline.find(',') + 1);
-    result.duration = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.distance = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_longitude = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_latitude = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_longitude = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_latitude = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.haversine = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_month = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_day = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_hour = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_minute = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.pickup_day_of_week = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_month = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_day = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_hour = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_minute = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dropoff_day_of_week = atoi(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.temperature = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.precipitation = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.wind_speed = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.humidity = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.solar_radiation = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.snow_fall = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.ground_temperature = atof(sline.substr(0,sline.find(',')).c_str());
-
-    sline.erase(0,sline.find(',') + 1);
-    result.dust_concentration = atof(sline.substr(0,sline.find(',')).c_str());
-
-    return result;
-}
 
 void loader::load(bool binary_format)
 {
@@ -125,14 +44,16 @@ void loader::load(bool binary_format)
             string sline = "";
             getline(file,sline,'\n');
 
+
             while(!file.eof())
             {
                 getline(file,sline,'\n');
 
                 if(sline == "")
                     continue;
-
-                data.push_back(extract(sline));
+                Features entry = extract(sline);
+                
+                data.push_back(entry);
             }
 
             file.close();
@@ -222,13 +143,14 @@ void loader::save(bool binary_format)
         {
             valid_file.write((char*)&data[lower_bound],sizeof(Features));
         }
-
+  
         upper_bound = floor(data.size() * (valid_perc + train_perc));
 
         for(; lower_bound <= upper_bound; lower_bound++)
         {
             train_file.write((char*)&data[lower_bound],sizeof(Features));
         }
+
 
         for(; lower_bound < data.size(); lower_bound++)
         {
@@ -250,21 +172,25 @@ void loader::save(bool binary_format)
 
         for(; lower_bound <= upper_bound; lower_bound++) 
         {
-            valid_file<<lower_bound<<","<<data[lower_bound].to_line()<<endl;
+            data[lower_bound].save_text(valid_file, lower_bound);
         }
 
+
         upper_bound = floor(data.size() * (valid_perc + train_perc));
+        cout<<"lower_bound: "<<lower_bound<<endl;
 
         for(unsigned int count = 0; lower_bound <= upper_bound; lower_bound++, count++)
         {
-            train_file<<count<<","<<data[lower_bound].to_line()<<endl;
+            data[lower_bound].save_text(train_file, count);
         }
+
+        cout<<"upper_bound: "<<upper_bound<<endl;
 
         for(unsigned int count = 0; lower_bound < data.size(); lower_bound++, count++)
         {
-            test_file<<count<<","<<data[lower_bound].to_line()<<endl;
+            data[lower_bound].save_text(test_file, count);
         }
-
+        
         valid_file.close();
         train_file.close();
         test_file.close();

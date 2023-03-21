@@ -19,7 +19,7 @@ class dust_concentration: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.dust_concentration;
         }

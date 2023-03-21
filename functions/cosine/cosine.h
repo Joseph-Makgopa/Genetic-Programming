@@ -24,7 +24,7 @@ class cosine: public primitive
             set(0, arg);
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return cos(get(0)->eval(features));
         }

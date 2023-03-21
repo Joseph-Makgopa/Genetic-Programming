@@ -19,7 +19,7 @@ class solar_radiation: public primitive
             return result;
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             return features.solar_radiation;
         }

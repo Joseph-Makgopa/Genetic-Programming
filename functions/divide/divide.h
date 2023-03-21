@@ -28,14 +28,14 @@ class divide: public primitive
             set(1, right);
         }
 
-        float eval(Features& features)
+        double eval(Features& features)
         {
             if(arguments_size() != 2)
             {
                 throw string("Error: "+ to_string(arguments_size()) + " arguments found for binary operator");
             }
 
-            float denominator = get(1)->eval(features);
+            double denominator = get(1)->eval(features);
 
             return get(0)->eval(features) / (denominator == 0 ? 1 : denominator);
         }
