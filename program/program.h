@@ -7,11 +7,16 @@
 #include <memory>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 
 class program{
 private:
     std::shared_ptr<primitive> root;
     double fitness;
+    double rmse;
+    double r_squared;
+    double mae;
+    double medae;
     void grow_method(shared_ptr<primitive>& parent,unsigned short depth);
     void full_method(shared_ptr<primitive>& parent,unsigned short depth);
 
@@ -19,8 +24,14 @@ private:
     {
         return rand() % primitives.size();
     }
+
+    shared_ptr<primitive> edit_helper(shared_ptr<primitive> node);
 public: 
-    program(): fitness(-1)
+    program(): fitness(numeric_limits<double>::max()), 
+        rmse(numeric_limits<double>::max()), 
+            r_squared(numeric_limits<double>::max()),
+                mae(numeric_limits<double>::max()),
+                    medae(numeric_limits<double>::max())
     {
         
     }
@@ -29,13 +40,33 @@ public:
     {
         root = right.root->clone();
         fitness = right.fitness;
+        rmse = right.rmse;
+        r_squared = right.r_squared;
+        mae = right.mae;
+        medae = right.medae;
     }
 
     program(const program&& right)
     {
         root = move(right.root);
         fitness = right.fitness;
+        rmse = right.rmse;
+        r_squared = right.r_squared;
+        mae = right.mae;
+        medae = right.medae;
     }
+
+    void clean()
+    {
+        root.reset();
+        fitness = numeric_limits<double>::max(); 
+        rmse = numeric_limits<double>::max();
+        r_squared = numeric_limits<double>::max();
+        mae = numeric_limits<double>::max();
+        medae = numeric_limits<double>::max();
+    }
+
+    void prune(unsigned int depth);
 
     void set_root(shared_ptr<primitive> arg)
     {
@@ -52,7 +83,29 @@ public:
         return fitness;
     }
 
+    double get_root_mean_square_error() const
+    {
+        return rmse;
+    }
+
+    double get_r_squared() const
+    {
+        return r_squared;
+    }
+
+    double get_median_absolute_error() const
+    {
+        return medae;
+    }
+
+    double get_mean_absolute_error() const
+    {
+        return mae;
+    }
+
     unsigned int count_nodes();
+
+    unsigned int height();
 
     pair<shared_ptr<primitive>, shared_ptr<primitive>> get_node(unsigned int index);
 
@@ -66,10 +119,22 @@ public:
         return 0;
     }
 
+    void set_root_mean_square_error(Features* data, unsigned int data_size);
+
+    void set_r_squared(Features* data, unsigned int data_size);
+
+    void set_median_absolute_error(Features* data, unsigned data_size);
+
+    void set_mean_absolute_error(Features* data, unsigned data_size);
+
     program operator=(const program& right)
     {
         root = right.root->clone();
         fitness = right.fitness;
+        rmse = right.rmse;
+        r_squared = right.r_squared;
+        mae = right.mae;
+        medae = right.medae;
 
         return *this;
     }
@@ -78,16 +143,22 @@ public:
     {
         if(this != &right)
         {
-            root = right.root->clone();
+            root = move(right.root);
             fitness = right.fitness;
+            rmse = right.rmse;
+            r_squared = right.r_squared;
+            mae = right.mae;
+            medae = right.medae;
         }
 
         return *this;
     }
 
-    void set_fitness(Features* data,unsigned int size, float bound);
+    void set_fitness(Features* data,unsigned int size);
 
     void build(unsigned int max_depth,bool grow);
+
+    program edit();
 
     string str() const
     {

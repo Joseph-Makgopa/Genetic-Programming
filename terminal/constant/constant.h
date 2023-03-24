@@ -25,6 +25,11 @@ class constant: public primitive
             return std::shared_ptr<constant>(new constant());;
         }
 
+        static std::shared_ptr<constant> object(int val)
+        {
+            return std::shared_ptr<constant>(new constant(val));;
+        }
+
         double eval(Features& )
         {
             return value;

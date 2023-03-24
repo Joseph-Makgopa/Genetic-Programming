@@ -29,7 +29,7 @@ class primitive{
 
         void set(int sub, shared_ptr<primitive> value)
         {
-            arguments[sub] = value;
+            arguments[sub] = move(value);
         }
 
         int arguments_size() const
@@ -54,7 +54,12 @@ class primitive{
 
         void add_argument(shared_ptr<primitive> arg)
         {
-            arguments.push_back(arg);
+            arguments.push_back(move(arg));
+        }
+
+        vector<shared_ptr<primitive>>& get_arguments()
+        {
+            return arguments;
         }
 
         virtual shared_ptr<primitive> clone()=0;

@@ -3,11 +3,11 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <cstdio>
-#include <ctime>
+#include <chrono>
 #include "Features/Features.h"
 #include "program/program.h"
 #include "functions/function_store/function_store.h"
+
 
 using namespace std;
 
@@ -34,7 +34,9 @@ struct parameters
     unsigned int population_size;
     unsigned int tournament_size;
     unsigned int mutation_depth;
+    unsigned int offspring_depth;
     double crossover_rate;
+    double mutation_rate;
     generation_method generation_method;
     double bound;
 };
@@ -48,18 +50,18 @@ vector<program> population;
 Features* data_set = nullptr;
 unsigned int data_size = 0;
 parameters params = {
-    {4, 44, 107, 9, 75, 63, 57, 36, 11, 112},   //seeds
+    {4, 1008, 107, 9, 751, 63, 57, 36, 111, 112},   //seeds
     10,  //runs
-    3,  //generations
-    4,  //max_depth
-    500,    //population_size
-    20,  //tournament_size
+    50,  //generations
+    3,  //max_depth
+    100,    //population_size
+    4,  //tournament_size
     2,  //mutation_depth
+    15, //offspring_depth
     0.7,    //crossover_rate
-    Ramped_Half_And_Half,   //generation_method
-    0.01 //bound
+    0.25,    //mutation_rate
+    Ramped_Half_And_Half   //generation_method
 };
-
 
 void load_and_split_and_save();
 Features extract(string sline);
@@ -69,15 +71,25 @@ unsigned int select_program();
 pair<program,program> crossover(program& parent_one,program& parent_two);
 program mutate(program& parent);
 program genetic_program();
-
+void threaded_genetic_program();
 
 int main()
 {
     load();
+    program model = genetic_program();
 
-    program result = genetic_program();
-    cout<<result.str()<<endl;
-    cout<<result.get_fitness()<<endl;
+    load(Test);
+    model.set_fitness(data_set, data_size);    
+    model.set_mean_absolute_error(data_set, data_size);
+    model.set_median_absolute_error(data_set, data_size);
+    model.set_r_squared(data_set, data_size);
+
+    cout<<endl;
+    cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
+    cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
+    cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
+    cout<<"median absolute error: "<<to_string(model.get_median_absolute_error())<<endl;
+    cout<<endl;
 
     delete data_set;
 
@@ -172,7 +184,7 @@ void load(data_set_type dtype)
             data_set = new Features[data_size];
         }break;
         case Test:{
-            file.open("dataset/binary_data/train.dat",ios::binary | ios::in );
+            file.open("dataset/binary_data/test.dat",ios::binary | ios::in );
             data_size = test_size;
             data_set = new Features[data_size];
         }break;
@@ -241,7 +253,7 @@ void initial_population()
                     population.push_back(move(full_individual));
                 }
 
-                depth = (depth + 1) % params.max_depth;
+                depth = (depth + 1) % (params.max_depth + 1);
                 depth = depth < 2 ? 2 : depth;
             }
         }break;
@@ -256,7 +268,7 @@ unsigned int select_program()
     for(int count = 1; count < params.tournament_size; count++)
     {
         random_index = rand() % population.size();
-        if(population[random_index].get_fitness() > population[result_index].get_fitness())
+        if(population[random_index].get_fitness() < population[result_index].get_fitness())
         {
             result_index = random_index;
         }
@@ -341,85 +353,123 @@ program mutate(program& parent)
 
 program genetic_program()
 {
-    initial_population();
-    program best;
+    unsigned int crossover_size = floor(params.population_size * params.crossover_rate);
+    unsigned int mutation_size = floor(params.population_size * params.mutation_rate);
+    program result;    
 
     for(int run = 0; run < params.runs; run++)
     {
+        auto begin = chrono::high_resolution_clock::now();
+
         srand(params.seeds[run]);
+        initial_population();
+        program best;
+
+        for(int count = 0; count < params.population_size; count++)
+        {
+            population[count].set_fitness(data_set, data_size);
+            if(population[count].get_fitness() < best.get_fitness())
+            {
+                best = population[count];
+            }
+        }
+
         cout<<"run: "<<run<<endl;
         
-
-        for(int generation = 0; generation < params.generations; generation++)
+        for(int generation = 0; generation < params.generations && best.get_fitness() != 0; generation++)
         {
-            unsigned int cutoff = floor(params.population_size * params.crossover_rate);
-            unsigned int offspring_counter = 0;
+            unsigned int offspring_counter = 0, crossover_counter = 0, mutation_counter = 0;
             vector<program> new_population(params.population_size);
             
-            cout<<endl;
-            for(int count = 0; count < params.population_size; count++)
-            {
-                population[count].set_fitness(data_set, data_size, params.bound);
-                if(population[count].get_fitness() > best.get_fitness())
-                {
-                    best = population[count];
-                }
-                cout<<population[count].str()<<endl;
-                cout<<population[count].get_fitness()<<endl;
-            }
-            cout<<endl; 
-            
-
             while(offspring_counter < params.population_size)
             {
-                if(offspring_counter < cutoff)
+                if(crossover_counter < crossover_size)
                 {
                     pair<program,program> offspring = crossover(population[select_program()], population[select_program()]);
                     
                     if(!offspring.first.get_root()->is_terminal())
                     {
+                        offspring.first.prune(params.offspring_depth);
                         new_population[offspring_counter++] = move(offspring.first);
+                        crossover_counter++;
                     }
 
                     if(offspring_counter < params.population_size && !offspring.second.get_root()->is_terminal())
                     {
+                        offspring.second.prune(params.offspring_depth);
                         new_population[offspring_counter++] = move(offspring.second);
+                        crossover_counter++;
                     }
 
-                }else
+                }else if(mutation_counter < mutation_size)
                 {
                     program offspring = mutate(population[select_program()]);
 
                     if(!offspring.get_root()->is_terminal())
                     {
+                        offspring.prune(params.offspring_depth);
                         new_population[offspring_counter++] = move(offspring);
+                        mutation_counter++;
                     }  
+                }else
+                {
+
+                    program offspring(population[select_program()]);
+                    new_population[offspring_counter++] = move(offspring);
                 }
             }
 
-            cout<<"generation: "<<generation<<endl;
-            cout<<"best: "<<best.str()<<endl;
-            cout<<"fitness: "<<best.get_fitness()<<endl;
-
             population = move(new_population);
-        }
-
-        for(int count = 0; count < params.population_size; count++)
-        {
-            population[count].set_fitness(data_set, data_size, params.bound);
-
-            if(population[count].get_fitness() > best.get_fitness())
-            {
-                best = population[count];
-            }
-        }
         
-        cout<<"generation: "<<params.generations<<endl;
+            for(int count = 0; count < params.population_size; count++)
+            {
+                population[count].set_fitness(data_set, data_size);
+
+                if(population[count].get_fitness() < best.get_fitness())
+                {
+                    best = population[count];
+                }
+            }
+
+            cout<<endl;
+            cout<<"generation: "<<generation + 1<<endl;
+            cout<<"best: "<<best.str()<<endl;
+            cout<<"height: "<<best.height()<<endl;
+            cout<<"fitness: "<<to_string(best.get_fitness())<<endl;
+            cout<<endl;
+        }
+
+
+        best.set_mean_absolute_error(data_set, data_size);
+        best.set_median_absolute_error(data_set, data_size);
+        best.set_r_squared(data_set, data_size);
+
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - begin);
+        
+        program edited = best.edit();
+        
+        cout<<endl;
+        cout<<"generation: "<<params.generations + 1<<endl;
         cout<<"best: "<<best.str()<<endl;
-        cout<<"fitness: "<<best.get_fitness()<<endl; 
+        cout<<"height: "<<best.height()<<endl;
+        cout<<"edited: "<<edited.str()<<endl;
+        cout<<"edited height: "<<edited.height()<<endl;
+        cout<<"runtime: "<<elapsed.count()<<endl;
+        cout<<"fitness: "<<to_string(best.get_fitness())<<endl;
+        cout<<"root mean square error: "<<to_string(best.get_root_mean_square_error())<<endl;
+        cout<<"r squared: "<<to_string(best.get_r_squared())<<endl;
+        cout<<"mean absolute error: "<<to_string(best.get_mean_absolute_error())<<endl;
+        cout<<"median absolute error: "<<to_string(best.get_median_absolute_error())<<endl;
+        cout<<endl;
+
+        if(best.get_fitness() < result.get_fitness())
+        {
+            result = move(best);
+        }
     }
 
-    return best;
+    return result;
 }
 
 Features extract(string sline)
@@ -503,3 +553,7 @@ Features extract(string sline)
     
     return result;
 }
+
+
+// COS 700 lecture
+// Draft Coach - Google Docs

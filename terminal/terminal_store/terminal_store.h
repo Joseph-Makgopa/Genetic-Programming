@@ -26,6 +26,7 @@
 #include "../humudity/humudity.h"
 #include "../ground_temperature/ground_temperature.h"
 #include "../dust_concentration/dust_concentration.h"
+#include "../wind_speed/wind_speed.h"
 #include "../constant/constant.h"
 
 using namespace std;
@@ -56,7 +57,8 @@ class terminal_store
             snow_fall::object(),
             solar_radiation::object(),
             ground_temperature::object(),
-            dust_concentration::object()
+            dust_concentration::object(),
+            wind_speed::object()
         };
 
         terminal_store()

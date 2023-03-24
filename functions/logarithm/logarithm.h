@@ -26,7 +26,9 @@ class logarithm: public primitive
 
         double eval(Features& features)
         {
-            return log10(get(0)->eval(features));
+            double argument = get(0)->eval(features);
+
+            return argument == 0 ? 0 : log10(abs(argument));
         }
 
         shared_ptr<primitive> clone()
