@@ -1,21 +1,181 @@
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 1
-in _ 2
+run: 0
+
+generation: 1
+best: multiply( humudity, divide( dropoff_month, cosine( cosine( wind_speed ) ) ) )
+height: 5
+fitness: 115972701.251517
+
+
+generation: 2
+best: add( multiply( haversine, add( wind_speed, dropoff_month ) ), solar_radiation )
+height: 4
+fitness: 109230976.322480
+
+
+generation: 3
+best: add( multiply( haversine, dropoff_month ), solar_radiation )
+height: 3
+fitness: 108789841.069992
+
+
+generation: 4
+best: add( multiply( haversine, dropoff_month ), solar_radiation )
+height: 3
+fitness: 108789841.069992
+
+
+generation: 5
+best: add( multiply( haversine, dropoff_month ), solar_radiation )
+height: 3
+fitness: 108789841.069992
+
+
+generation: 6
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( cosine( add( temperature, pickup_hour ) ), pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 8
+fitness: 107492107.237366
+
+
+generation: 7
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( cosine( wind_speed ), pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 7
+fitness: 107364055.693441
+
+
+generation: 8
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( cosine( wind_speed ), pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 7
+fitness: 107364055.693441
+
+
+generation: 9
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( cosine( wind_speed ), pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 7
+fitness: 107364055.693441
+
+
+generation: 10
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( cosine( wind_speed ), pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 7
+fitness: 107364055.693441
+
+
+generation: 11
+best: add( multiply( haversine, add( sine( add( dropoff_day_of_week, distance ) ), dropoff_month ) ), add( add( dropoff_day_of_week, cosine( add( pickup_latitude, pickup_latitude ) ) ), add( precipitation, wind_speed ) ) )
+height: 6
+fitness: 107075679.729246
+
+
+generation: 12
+best: add( multiply( haversine, add( sine( add( wind_speed, dropoff_month ) ), dropoff_month ) ), wind_speed )
+height: 6
+fitness: 105882243.341125
+
+
+generation: 13
+best: add( multiply( haversine, add( sine( add( wind_speed, dropoff_month ) ), dropoff_month ) ), wind_speed )
+height: 6
+fitness: 105882243.341125
+
+
+generation: 14
+best: add( multiply( haversine, add( sine( add( wind_speed, dropoff_month ) ), dropoff_month ) ), wind_speed )
+height: 6
+fitness: 105882243.341125
+
+
+generation: 15
+best: add( multiply( haversine, add( sine( add( wind_speed, dropoff_month ) ), dropoff_month ) ), wind_speed )
+height: 6
+fitness: 105882243.341125
+
+
+generation: 16
+best: add( multiply( haversine, add( sine( add( wind_speed, dropoff_month ) ), dropoff_month ) ), wind_speed )
+height: 6
+fitness: 105882243.341125
+
+
+generation: 17
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( dropoff_day_of_week, divide( pickup_hour, pickup_month ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ) )
+height: 9
+fitness: 105498780.797975
+
+
+generation: 18
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( dropoff_day_of_week, divide( pickup_hour, pickup_month ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ) )
+height: 9
+fitness: 105498780.797975
+
+
+generation: 19
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( cosine( multiply( haversine, add( sine( add( dropoff_day_of_week, subtract( wind_speed, sine( temperature ) ) ) ), dropoff_month ) ) ), divide( pickup_hour, pickup_month ) ), sine( pickup_hour ) ) )
+height: 11
+fitness: 105163430.840568
+
+
+generation: 20
+best: add( multiply( haversine, add( sine( divide( cosine( divide( dropoff_minute, dropoff_latitude ) ), divide( distance, solar_radiation ) ) ), dropoff_month ) ), add( divide( pickup_hour, pickup_month ), add( divide( cosine( sine( haversine ) ), pickup_longitude ), wind_speed ) ) )
+height: 8
+fitness: 104920079.217514
+
+
+generation: 21
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( cosine( multiply( haversine, add( sine( add( dropoff_day_of_week, subtract( wind_speed, sine( temperature ) ) ) ), divide( multiply( dropoff_day, pickup_longitude ), subtract( dropoff_hour, dropoff_minute ) ) ) ) ), divide( pickup_hour, pickup_month ) ), wind_speed ) )
+height: 11
+fitness: 104371337.945052
+
+
+generation: 22
+best: add( multiply( haversine, add( sine( sine( subtract( pickup_latitude, dropoff_month ) ) ), dropoff_month ) ), add( add( sine( sine( dropoff_latitude ) ), divide( pickup_hour, pickup_month ) ), add( divide( precipitation, pickup_longitude ), wind_speed ) ) )
+height: 7
+fitness: 104218046.799595
+
+
+generation: 23
+best: add( multiply( haversine, add( sine( sine( subtract( pickup_latitude, dropoff_month ) ) ), dropoff_month ) ), add( add( sine( pickup_day_of_week ), divide( pickup_hour, pickup_month ) ), add( divide( precipitation, pickup_longitude ), wind_speed ) ) )
+height: 7
+fitness: 104123983.349859
+
+
+generation: 24
+best: add( multiply( haversine, add( sine( sine( subtract( pickup_latitude, dropoff_month ) ) ), dropoff_month ) ), add( add( sine( pickup_day_of_week ), divide( pickup_hour, pickup_month ) ), add( divide( precipitation, pickup_longitude ), wind_speed ) ) )
+height: 7
+fitness: 104123983.349859
+
+
+generation: 25
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( cosine( multiply( haversine, add( sine( add( dropoff_day_of_week, sine( subtract( temperature, precipitation ) ) ) ), divide( multiply( add( sine( add( dropoff_day_of_week, subtract( wind_speed, divide( subtract( constant(0), ground_temperature ), multiply( temperature, dropoff_day_of_week ) ) ) ) ), dropoff_month ), pickup_longitude ), subtract( dropoff_hour, add( subtract( dust_concentration, snow_fall ), cosine( humudity ) ) ) ) ) ) ), divide( pickup_hour, pickup_month ) ), add( cosine( multiply( haversine, add( sine( add( sine( sine( snow_fall ) ), subtract( wind_speed, sine( temperature ) ) ) ), dropoff_month ) ) ), divide( pickup_hour, pickup_month ) ) ) )
+height: 15
+fitness: 103351132.677866
+
+
+generation: 26
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( cosine( multiply( haversine, add( multiply( cosine( dust_concentration ), multiply( precipitation, precipitation ) ), divide( multiply( add( sine( add( dropoff_day_of_week, subtract( wind_speed, divide( subtract( constant(0), ground_temperature ), multiply( temperature, dropoff_day_of_week ) ) ) ) ), dropoff_month ), pickup_longitude ), subtract( dropoff_hour, add( subtract( dust_concentration, snow_fall ), cosine( humudity ) ) ) ) ) ) ), divide( pickup_hour, pickup_month ) ), add( cosine( multiply( haversine, add( sine( add( sine( sine( snow_fall ) ), subtract( wind_speed, sine( temperature ) ) ) ), dropoff_month ) ) ), divide( pickup_hour, pickup_month ) ) ) )
+height: 15
+fitness: 103349144.330094
+
+
+generation: 27
+best: add( multiply( haversine, add( sine( divide( divide( pickup_hour, pickup_month ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( cosine( multiply( haversine, add( multiply( cosine( dust_concentration ), multiply( precipitation, precipitation ) ), divide( multiply( add( sine( add( dropoff_day_of_week, subtract( wind_speed, divide( subtract( constant(0), ground_temperature ), multiply( temperature, dropoff_day_of_week ) ) ) ) ), dropoff_month ), pickup_longitude ), subtract( dropoff_hour, add( subtract( dust_concentration, snow_fall ), cosine( humudity ) ) ) ) ) ) ), divide( pickup_hour, pickup_month ) ), add( cosine( multiply( haversine, add( sine( add( sine( sine( add( pickup_hour, subtract( wind_speed, dropoff_month ) ) ) ), subtract( wind_speed, sine( temperature ) ) ) ), dropoff_month ) ) ), divide( pickup_hour, pickup_month ) ) ) )
+height: 15
+fitness: 103341932.043816
+
+
+generation: 28
+best: add( multiply( haversine, add( sine( divide( divide( haversine, pickup_month ), divide( distance, add( divide( cosine( add( subtract( add( wind_speed, dropoff_month ), add( add( dropoff_day_of_week, dropoff_latitude ), sine( divide( pickup_latitude, pickup_longitude ) ) ) ), divide( divide( distance, divide( sine( dropoff_day ), add( add( dropoff_day_of_week, cosine( distance ) ), add( subtract( haversine, wind_speed ), wind_speed ) ) ) ), add( wind_speed, solar_radiation ) ) ) ), divide( distance, add( add( cosine( precipitation ), add( pickup_hour, dust_concentration ) ), add( multiply( distance, solar_radiation ), divide( humudity, temperature ) ) ) ) ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( subtract( wind_speed, sine( cosine( precipitation ) ) ), divide( pickup_hour, multiply( haversine, add( sine( divide( divide( pickup_hour, add( add( add( dropoff_day_of_week, divide( pickup_hour, pickup_month ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ), sine( pickup_hour ) ) ), divide( distance, add( sine( dust_concentration ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ) ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ) )
+height: 17
+fitness: 97985511.298798
+
+
+generation: 29
+best: add( multiply( haversine, add( sine( divide( divide( haversine, pickup_month ), divide( distance, add( divide( cosine( add( subtract( add( wind_speed, dropoff_month ), add( add( dropoff_day_of_week, dropoff_latitude ), sine( divide( pickup_latitude, pickup_longitude ) ) ) ), divide( divide( distance, divide( sine( dropoff_day ), add( add( dropoff_day_of_week, cosine( distance ) ), add( subtract( haversine, wind_speed ), wind_speed ) ) ) ), add( wind_speed, solar_radiation ) ) ) ), divide( distance, add( add( cosine( precipitation ), add( pickup_hour, dust_concentration ) ), add( multiply( distance, solar_radiation ), divide( humudity, temperature ) ) ) ) ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( subtract( wind_speed, sine( cosine( precipitation ) ) ), divide( pickup_hour, multiply( haversine, add( sine( dropoff_month ), dropoff_month ) ) ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ) )
+height: 17
+fitness: 97902238.124480
+
+
+generation: 30
+best: add( multiply( haversine, add( sine( divide( divide( haversine, pickup_month ), divide( distance, add( divide( cosine( add( subtract( add( wind_speed, dropoff_month ), add( add( dropoff_day_of_week, dropoff_latitude ), sine( divide( pickup_latitude, pickup_longitude ) ) ) ), divide( divide( distance, divide( sine( dropoff_day ), add( add( dropoff_day_of_week, cosine( distance ) ), add( subtract( haversine, wind_speed ), wind_speed ) ) ) ), add( divide( distance, dropoff_hour ), solar_radiation ) ) ) ), divide( distance, add( add( cosine( precipitation ), add( pickup_hour, dust_concentration ) ), add( multiply( distance, solar_radiation ), divide( humudity, temperature ) ) ) ) ), multiply( precipitation, haversine ) ) ) ) ), dropoff_month ) ), add( add( subtract( wind_speed, sine( cosine( precipitation ) ) ), divide( pickup_hour, multiply( haversine, add( sine( divide( divide( pickup_hour, add( add( add( dropoff_day_of_week, divide( pickup_hour, pickup_month ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ), sine( pickup_hour ) ) ), divide( distance, add( sine( dust_concentration ), pickup_longitude ) ) ) ), dropoff_month ) ) ) ), sine( divide( pickup_latitude, pickup_longitude ) ) ) )
+height: 17
+fitness: 97867306.765063
+

@@ -48,18 +48,18 @@ struct parameters
 
 vector<program> population;
 Features* data_set = nullptr;
-unsigned int data_size = 0;
+unsigned int data_size = 0; //1679489208
 parameters params = {
-    {4, 1008, 107, 9, 751, 63, 57, 36, 111, 112},   //seeds
+    {1579688843, 1679681008, 1079688975, 99689032, 7516890, 690833, 5715796, 3679689135, 1119689183, 1129489208},   //seeds
     10,  //runs
     50,  //generations
     3,  //max_depth
-    100,    //population_size
+    200,    //population_size
     4,  //tournament_size
-    2,  //mutation_depth
-    15, //offspring_depth
-    0.7,    //crossover_rate
-    0.25,    //mutation_rate
+    3,  //mutation_depth
+    18, //offspring_depth
+    0.65,    //crossover_rate
+    0.35,    //mutation_rate
     Ramped_Half_And_Half   //generation_method
 };
 
@@ -75,16 +75,18 @@ void threaded_genetic_program();
 
 int main()
 {
-    load();
+    load(Train);
     program model = genetic_program();
 
     load(Test);
-    model.set_fitness(data_set, data_size);    
+    model.set_fitness(data_set, data_size);
+    model.set_root_mean_square_error(data_set, data_size);   
     model.set_mean_absolute_error(data_set, data_size);
     model.set_median_absolute_error(data_set, data_size);
     model.set_r_squared(data_set, data_size);
 
     cout<<endl;
+    cout<<"fitness: "<<to_string(model.get_fitness())<<endl;
     cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
     cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
     cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
@@ -401,7 +403,7 @@ program genetic_program()
                         crossover_counter++;
                     }
 
-                }else if(mutation_counter < mutation_size)
+                }else
                 {
                     program offspring = mutate(population[select_program()]);
 
@@ -411,16 +413,12 @@ program genetic_program()
                         new_population[offspring_counter++] = move(offspring);
                         mutation_counter++;
                     }  
-                }else
-                {
-
-                    program offspring(population[select_program()]);
-                    new_population[offspring_counter++] = move(offspring);
                 }
             }
 
             population = move(new_population);
         
+
             for(int count = 0; count < params.population_size; count++)
             {
                 population[count].set_fitness(data_set, data_size);
@@ -439,7 +437,7 @@ program genetic_program()
             cout<<endl;
         }
 
-
+        best.set_root_mean_square_error(data_set, data_size);
         best.set_mean_absolute_error(data_set, data_size);
         best.set_median_absolute_error(data_set, data_size);
         best.set_r_squared(data_set, data_size);

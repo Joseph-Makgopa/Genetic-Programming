@@ -13,8 +13,13 @@ using namespace std;
 
 void program::set_fitness(Features* data,unsigned int size)
 {
-    set_root_mean_square_error(data, size);
-    fitness = rmse;
+    fitness = 0;
+
+    for(int count = 0; count < size; count++)
+    {
+        double estimate = eval(data[count]);
+        fitness += abs(data[count].duration - estimate);
+    }
 }
 
 void program::set_root_mean_square_error(Features* data, unsigned int data_size)
