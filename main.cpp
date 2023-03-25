@@ -4,9 +4,12 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
+#include <atomic>
+#include <condition_variable>
 #include "Features/Features.h"
 #include "program/program.h"
 #include "functions/function_store/function_store.h"
+#include "thread_pool/thread_pool.h"
 
 
 using namespace std;
@@ -62,6 +65,7 @@ parameters params = {
     0.35,    //mutation_rate
     Ramped_Half_And_Half   //generation_method
 };
+mutex mutex_object;
 
 void load_and_split_and_save();
 Features extract(string sline);
@@ -75,26 +79,25 @@ void threaded_genetic_program();
 
 int main()
 {
-    load_and_split_and_save();
-    // load(Train);
-    // program model = genetic_program();
+    load(Train);
+    program model = genetic_program();
 
-    // load(Test);
-    // model.set_fitness(data_set, data_size);
-    // model.set_root_mean_square_error(data_set, data_size);   
-    // model.set_mean_absolute_error(data_set, data_size);
-    // model.set_median_absolute_error(data_set, data_size);
-    // model.set_r_squared(data_set, data_size);
+    load(Test);
+    model.set_fitness(data_set, data_size);
+    model.set_root_mean_square_error(data_set, data_size);   
+    model.set_mean_absolute_error(data_set, data_size);
+    model.set_median_absolute_error(data_set, data_size);
+    model.set_r_squared(data_set, data_size);
 
-    // cout<<endl;
-    // cout<<"fitness: "<<to_string(model.get_fitness())<<endl;
-    // cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
-    // cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
-    // cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
-    // cout<<"median absolute error: "<<to_string(model.get_median_absolute_error())<<endl;
-    // cout<<endl;
+    cout<<endl;
+    cout<<"fitness: "<<to_string(model.get_fitness())<<endl;
+    cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
+    cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
+    cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
+    cout<<"median absolute error: "<<to_string(model.get_median_absolute_error())<<endl;
+    cout<<endl;
 
-    // delete data_set;
+    delete data_set;
 
     return 0;
 }
@@ -358,7 +361,8 @@ program genetic_program()
 {
     unsigned int crossover_size = floor(params.population_size * params.crossover_rate);
     unsigned int mutation_size = floor(params.population_size * params.mutation_rate);
-    program result;    
+    program result;
+    thread_pool::instance().start();    
 
     for(int run = 0; run < params.runs; run++)
     {
@@ -367,15 +371,28 @@ program genetic_program()
         srand(params.seeds[run]);
         initial_population();
         program best;
+        atomic<short> atomic_counter = 0;
 
         for(int count = 0; count < params.population_size; count++)
         {
-            population[count].set_fitness(data_set, data_size);
-            if(population[count].get_fitness() < best.get_fitness())
-            {
-                best = population[count];
-            }
+            thread_pool::instance().add_job([&,count]{
+                population[count].set_fitness(data_set, data_size);
+
+                if(population[count].get_fitness() < best.get_fitness())
+                {
+                    unique_lock<mutex> lock(mutex_object);
+                    
+                    if(population[count].get_fitness() < best.get_fitness())
+                    {
+                        best = population[count];
+                    }
+                }
+
+                atomic_counter = atomic_counter.load() + 1;
+            });
         }
+
+        while(atomic_counter.load() != params.population_size){}
 
         cout<<"run: "<<run<<endl;
         
@@ -419,16 +436,28 @@ program genetic_program()
 
             population = move(new_population);
         
+            atomic_counter = 0;
 
             for(int count = 0; count < params.population_size; count++)
             {
-                population[count].set_fitness(data_set, data_size);
+                thread_pool::instance().add_job([&,count]{
+                    population[count].set_fitness(data_set, data_size);
 
-                if(population[count].get_fitness() < best.get_fitness())
-                {
-                    best = population[count];
-                }
+                    if(population[count].get_fitness() < best.get_fitness())
+                    {
+                        unique_lock<mutex> lock(mutex_object);
+                        
+                        if(population[count].get_fitness() < best.get_fitness())
+                        {
+                            best = population[count];
+                        }
+                    }
+
+                    atomic_counter = atomic_counter.load() + 1;
+                });
             }
+
+            while(atomic_counter.load() != params.population_size){}
 
             cout<<endl;
             cout<<"generation: "<<generation + 1<<endl;
@@ -438,11 +467,30 @@ program genetic_program()
             cout<<endl;
         }
 
-        best.set_root_mean_square_error(data_set, data_size);
-        best.set_mean_absolute_error(data_set, data_size);
-        best.set_median_absolute_error(data_set, data_size);
-        best.set_r_squared(data_set, data_size);
+        atomic_counter = 0;
 
+        thread_pool::instance().add_job([&]{
+            best.set_root_mean_square_error(data_set, data_size);
+            atomic_counter = atomic_counter.load() + 1;
+        });
+
+        thread_pool::instance().add_job([&]{
+            best.set_mean_absolute_error(data_set, data_size);
+            atomic_counter = atomic_counter.load() + 1;
+        });
+
+        thread_pool::instance().add_job([&]{
+            best.set_median_absolute_error(data_set, data_size);
+            atomic_counter = atomic_counter.load() + 1;
+        });
+
+        thread_pool::instance().add_job([&]{
+            best.set_r_squared(data_set, data_size);
+            atomic_counter = atomic_counter.load() + 1;
+        });
+
+        while(atomic_counter.load() != 4){}
+        
         auto end = chrono::high_resolution_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - begin);
         
@@ -468,6 +516,8 @@ program genetic_program()
         }
     }
 
+    thread_pool::instance().stop();
+    
     return result;
 }
 
