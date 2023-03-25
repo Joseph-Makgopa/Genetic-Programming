@@ -11,6 +11,7 @@
 #include "../cosine/cosine.h"
 #include "../sine/sine.h"
 #include "../exponential/exponential.h"
+#include "../square/square.h"
 
 using namespace std;
 
@@ -71,6 +72,7 @@ class function_store
                 // make_shared<logarithm>(),
                 make_shared<sine>(),
                 make_shared<cosine>(),
+                make_shared<square>()
                 //make_shared<exponential>()
             };
         }

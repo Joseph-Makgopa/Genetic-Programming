@@ -42,9 +42,9 @@ struct parameters
 };
 
 #define max_size 9601139
-#define valid_size 960114
-#define train_size 6720797
-#define test_size 1920228
+#define valid_size 2000000
+#define train_size 3800570
+#define test_size 3800569
 
 vector<program> population;
 Features* data_set = nullptr;
@@ -75,25 +75,26 @@ void threaded_genetic_program();
 
 int main()
 {
-    load(Train);
-    program model = genetic_program();
+    load_and_split_and_save();
+    // load(Train);
+    // program model = genetic_program();
 
-    load(Test);
-    model.set_fitness(data_set, data_size);
-    model.set_root_mean_square_error(data_set, data_size);   
-    model.set_mean_absolute_error(data_set, data_size);
-    model.set_median_absolute_error(data_set, data_size);
-    model.set_r_squared(data_set, data_size);
+    // load(Test);
+    // model.set_fitness(data_set, data_size);
+    // model.set_root_mean_square_error(data_set, data_size);   
+    // model.set_mean_absolute_error(data_set, data_size);
+    // model.set_median_absolute_error(data_set, data_size);
+    // model.set_r_squared(data_set, data_size);
 
-    cout<<endl;
-    cout<<"fitness: "<<to_string(model.get_fitness())<<endl;
-    cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
-    cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
-    cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
-    cout<<"median absolute error: "<<to_string(model.get_median_absolute_error())<<endl;
-    cout<<endl;
+    // cout<<endl;
+    // cout<<"fitness: "<<to_string(model.get_fitness())<<endl;
+    // cout<<"root mean square error: "<<to_string(model.get_root_mean_square_error())<<endl;
+    // cout<<"r squared: "<<to_string(model.get_r_squared())<<endl;
+    // cout<<"mean absolute error: "<<to_string(model.get_mean_absolute_error())<<endl;
+    // cout<<"median absolute error: "<<to_string(model.get_median_absolute_error())<<endl;
+    // cout<<endl;
 
-    delete data_set;
+    // delete data_set;
 
     return 0;
 }
@@ -114,7 +115,7 @@ void load_and_split_and_save()
     fstream test_binary_file("dataset/binary_data/test.dat", ios::binary | ios::out);
 
     unsigned int valid_max = valid_size;
-    unsigned int train_max = 7680911;
+    unsigned int train_max = valid_size + train_size;
     
     string sline;
     int counter = 0;
